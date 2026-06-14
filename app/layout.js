@@ -4,6 +4,8 @@ import Particles from '../components/Particles';
 export const metadata = {
   title: '夏のタイムカプセル Letter',
   description: '1年後の自分への手紙を、デジタルのタイムカプセルに。Luna One-Man Live「夏のタイムカプセル」',
+  // 検索エンジンにインデックスさせない（URLを知る人だけがアクセスできる状態にする）
+  robots: { index: false, follow: false },
   openGraph: {
     title: '夏のタイムカプセル Letter',
     description: '1年後の自分への手紙を、デジタルのタイムカプセルに。',
