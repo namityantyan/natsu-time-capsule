@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getAdminClient } from '../../../lib/supabaseAdmin';
 import { isRevealed, BODY_MAX, NICKNAME_MAX } from '../../../lib/config';
+import { isAuthed } from '../../../lib/auth';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -51,8 +52,11 @@ export async function POST(req) {
 
 // 公開ページ用：公開日以降のみ、公開OK・承認済み・非表示でない手紙を返す
 export async function GET(req) {
-  if (!isRevealed()) {
-    return NextResponse.json({ revealed: false, letters: [] });
+  const revealed = isRevealed();
+  // 公開日前でも、管理者ログイン中はプレビュー表示できる
+  const preview = !revealed && isAuthed();
+  if (!revealed && !preview) {
+    return NextResponse.json({ revealed: false, preview: false, letters: [] });
   }
   const { searchParams } = new URL(req.url);
   const mode = searchParams.get('mode') === 'random' ? 'random' : 'list';
@@ -72,7 +76,7 @@ export async function GET(req) {
     if (mode === 'random' && letters.length > 0) {
       letters = [letters[Math.floor(Math.random() * letters.length)]];
     }
-    return NextResponse.json({ revealed: true, letters });
+    return NextResponse.json({ revealed, preview, letters });
   } catch (e) {
     console.error('list error', e);
     return NextResponse.json({ error: '取得に失敗しました。' }, { status: 500 });

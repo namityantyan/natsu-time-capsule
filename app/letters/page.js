@@ -11,7 +11,7 @@ function fmt(iso) {
 }
 
 export default function LettersPage() {
-  const [state, setState] = useState({ loading: true, revealed: false, letters: [] });
+  const [state, setState] = useState({ loading: true, revealed: false, preview: false, letters: [] });
   const [mode, setMode] = useState('list');
 
   const load = useCallback(async (m) => {
@@ -19,16 +19,16 @@ export default function LettersPage() {
     try {
       const res = await fetch(`/api/letters?mode=${m}`, { cache: 'no-store' });
       const data = await res.json();
-      setState({ loading: false, revealed: !!data.revealed, letters: data.letters || [] });
+      setState({ loading: false, revealed: !!data.revealed, preview: !!data.preview, letters: data.letters || [] });
     } catch {
-      setState({ loading: false, revealed: false, letters: [] });
+      setState({ loading: false, revealed: false, preview: false, letters: [] });
     }
   }, []);
 
   useEffect(() => { load(mode); }, [mode, load]);
 
-  // 公開前：ロック画面
-  if (!state.loading && !state.revealed) {
+  // 公開前：ロック画面（管理者ログイン中はプレビュー表示するのでロックしない）
+  if (!state.loading && !state.revealed && !state.preview) {
     return (
       <div className="center-page">
         <div className="panel">
@@ -50,6 +50,11 @@ export default function LettersPage() {
   return (
     <div className="wrap">
       <section className="section" style={{ paddingTop: 60 }}>
+        {state.preview && (
+          <div className="notice" style={{ marginBottom: 20, textAlign: 'center' }}>
+            プレビュー表示中（管理者のみ）。公開日 2027年9月12日 までは、一般の人にはロック画面が表示されます。
+          </div>
+        )}
         <div style={{ textAlign: 'center', marginBottom: 8 }}>
           <p className="eyebrow">Dear me, one summer later.</p>
           <h2>みんなの手紙</h2>
