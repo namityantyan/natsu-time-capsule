@@ -100,7 +100,7 @@ export default function LettersPage() {
         )}
 
         {state.letters.map((l) => (
-          <article className="letter-card" key={l.id}>
+          <article className="letter-card reveal" key={l.id}>
             <div className="letter-body">{l.body}</div>
             <div className="letter-meta">
               <span>— {l.nickname}</span>
