@@ -27,6 +27,25 @@ export default function LettersPage() {
 
   useEffect(() => { load(mode); }, [mode, load]);
 
+  // 手紙がビューに入ったら、チョークで書かれるように表示する
+  useEffect(() => {
+    if (state.loading) return;
+    const cards = document.querySelectorAll('.letter-card');
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('drawn');
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    cards.forEach((c) => io.observe(c));
+    return () => io.disconnect();
+  }, [state.letters, state.loading]);
+
   // 公開前：ロック画面（管理者ログイン中はプレビュー表示するのでロックしない）
   if (!state.loading && !state.revealed && !state.preview) {
     return (
@@ -51,7 +70,7 @@ export default function LettersPage() {
     <div className="wrap">
       <section className="section" style={{ paddingTop: 60 }}>
         {state.preview && (
-          <div className="notice" style={{ marginBottom: 20, textAlign: 'center' }}>
+          <div className="preview-banner">
             プレビュー表示中（管理者のみ）。公開日 2027年9月12日 までは、一般の人にはロック画面が表示されます。
           </div>
         )}
@@ -85,7 +104,7 @@ export default function LettersPage() {
             <div className="letter-body">{l.body}</div>
             <div className="letter-meta">
               <span>— {l.nickname}</span>
-              <span>{fmt(l.created_at)}</span>
+              <span className="date">{fmt(l.created_at)}</span>
             </div>
           </article>
         ))}

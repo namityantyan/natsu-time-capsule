@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Countdown from '../components/Countdown';
-import FerrisWheel from '../components/FerrisWheel';
 import { COPY, BODY_MAX, NICKNAME_MAX } from '../lib/config';
 
 export default function SubmitPage() {
@@ -41,11 +40,12 @@ export default function SubmitPage() {
   return (
     <>
       <section className="hero">
-        <FerrisWheel />
-        <p className="eyebrow">{COPY.eyebrow}</p>
-        <h1 className="title">{COPY.title}</h1>
-        <p className="sub">{COPY.sub}</p>
-        <p className="scroll-hint">scroll — 1年後の自分へ手紙を書く</p>
+        <div className="hero-inner">
+          <p className="eyebrow">{COPY.eyebrow}</p>
+          <h1 className="title">{COPY.title}</h1>
+          <p className="sub">{COPY.sub}</p>
+          <p className="scroll-hint">scroll — 1年後の自分へ手紙を書く</p>
+        </div>
       </section>
 
       <div className="wrap">
