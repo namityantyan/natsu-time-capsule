@@ -11,6 +11,7 @@ export default function SubmitPage() {
   const [email, setEmail] = useState('');
   const [visibility, setVisibility] = useState('public');
   const [consent, setConsent] = useState(false);
+  const [website, setWebsite] = useState(''); // ハニーポット（人間は触れない）
   const [error, setError] = useState('');
   const [sending, setSending] = useState(false);
 
@@ -26,7 +27,7 @@ export default function SubmitPage() {
       const res = await fetch('/api/letters', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nickname, body, email, visibility, consent }),
+        body: JSON.stringify({ nickname, body, email, visibility, consent, website }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '送信に失敗しました。');
@@ -61,6 +62,18 @@ export default function SubmitPage() {
             <p className="muted small" style={{ marginTop: 4 }}>
               いまの気持ちを、1年後のあなたへ。投稿は運営の確認後に公開されます。
             </p>
+
+            {/* ハニーポット: スパムボット除け。人間には見えず、入力されたらサーバー側で破棄する */}
+            <input
+              type="text"
+              name="website"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
+            />
 
             <label className="field">
               <span className="lab">ニックネーム<span className="req">必須</span></span>

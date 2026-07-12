@@ -6,6 +6,26 @@ import { isAuthed } from '../../../lib/auth';
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
+// 簡易IPレート制限。同一IPから RATE_WINDOW_MS 内に RATE_MAX 件まで。
+// 注意: Vercel はインスタンスが揮発するため、このメモリ内カウンタは厳密ではない
+// （インスタンスをまたぐと共有されない）。あくまで軽いスパム抑制用。
+const RATE_WINDOW_MS = 60 * 1000;
+const RATE_MAX = 3;
+const ipHits = new Map(); // ip -> number[]（直近の投稿時刻）
+
+function rateLimited(ip) {
+  if (!ip) return false; // IPが取れなければ制限しない
+  const now = Date.now();
+  const hits = (ipHits.get(ip) || []).filter((t) => now - t < RATE_WINDOW_MS);
+  if (hits.length >= RATE_MAX) {
+    ipHits.set(ip, hits);
+    return true;
+  }
+  hits.push(now);
+  ipHits.set(ip, hits);
+  return false;
+}
+
 // 手紙を投稿
 export async function POST(req) {
   let payload;
@@ -13,6 +33,16 @@ export async function POST(req) {
     payload = await req.json();
   } catch {
     return NextResponse.json({ error: 'リクエストが不正です。' }, { status: 400 });
+  }
+
+  // ハニーポット: ボットが埋めた場合は保存せず、成功したように 200 を返す
+  if (String(payload.website || '').trim() !== '') {
+    return NextResponse.json({ ok: true });
+  }
+
+  const ip = (req.headers.get('x-forwarded-for') || '').split(',')[0].trim();
+  if (rateLimited(ip)) {
+    return NextResponse.json({ error: '短時間に投稿が集中しています。少し時間をおいてください。' }, { status: 429 });
   }
 
   const nickname = String(payload.nickname || '').trim();

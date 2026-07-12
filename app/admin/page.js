@@ -12,15 +12,21 @@ export default function AdminPage() {
   const [letters, setLetters] = useState([]);
   const [q, setQ] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadErr, setLoadErr] = useState('');
 
   const load = useCallback(async (query = '') => {
     setLoading(true);
+    setLoadErr('');
     try {
       const res = await fetch(`/api/admin/letters?q=${encodeURIComponent(query)}`, { cache: 'no-store' });
       if (res.status === 401) { setAuthed(false); return; }
       const data = await res.json();
       setAuthed(true);
       setLetters(data.letters || []);
+    } catch {
+      // fetch / json 失敗時に「読み込み中…」で固まらないようエラー状態にする
+      setAuthed(false);
+      setLoadErr('読み込みに失敗しました。通信環境を確認してください。');
     } finally {
       setLoading(false);
     }
@@ -80,7 +86,13 @@ export default function AdminPage() {
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoFocus />
           </label>
           {loginErr && <p className="err">{loginErr}</p>}
+          {loadErr && <p className="err">{loadErr}</p>}
           <button className="btn" type="submit">ログイン</button>
+          {loadErr && (
+            <button type="button" className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => load()}>
+              再試行
+            </button>
+          )}
         </form>
       </div>
     );

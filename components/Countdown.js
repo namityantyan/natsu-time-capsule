@@ -13,7 +13,9 @@ function diff() {
   return { d, h, m, s, done: ms === 0 };
 }
 
-export default function Countdown() {
+// reloadOnDone: 公開日に到達したらページをリロードする（/letters のロック解錠用）。
+// トップや完了ページでの暴発を避けるため、必要な箇所でのみ true を渡す。
+export default function Countdown({ reloadOnDone = false }) {
   const [t, setT] = useState(null);
 
   useEffect(() => {
@@ -21,6 +23,13 @@ export default function Countdown() {
     const id = setInterval(() => setT(diff()), 1000);
     return () => clearInterval(id);
   }, []);
+
+  // 0（公開日到達）になったらロック画面を解錠するためリロードする
+  useEffect(() => {
+    if (reloadOnDone && t && t.done) {
+      window.location.reload();
+    }
+  }, [reloadOnDone, t]);
 
   // ハイドレーション不一致を避けるため、初回はプレースホルダ
   const units = t

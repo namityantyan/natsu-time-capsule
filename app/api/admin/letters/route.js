@@ -5,13 +5,19 @@ import { isAuthed } from '../../../../lib/auth';
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
+// PostgREST のフィルタDSLで意味を持つ文字と ilike のワイルドカードを無害化する。
+// 安全側に倒し、検索の利便性より壊れないことを優先（該当文字は単純に除去）。
+function sanitizeSearch(q) {
+  return q.replace(/[,().%\\]/g, '').trim();
+}
+
 // 全投稿を返す（管理用）。検索クエリ ?q= 対応。
 export async function GET(req) {
   if (!isAuthed()) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
   const { searchParams } = new URL(req.url);
-  const q = (searchParams.get('q') || '').trim();
+  const q = sanitizeSearch((searchParams.get('q') || '').trim());
 
   try {
     const supabase = getAdminClient();

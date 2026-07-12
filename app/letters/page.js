@@ -56,7 +56,7 @@ export default function LettersPage() {
           <p className="muted small" style={{ marginTop: 10 }}>
             タイムカプセルが開くのは 2027年9月12日 00:00。<br />それまで、手紙はそっと眠っています。
           </p>
-          <Countdown />
+          <Countdown reloadOnDone />
           <div className="btn-row">
             <a className="btn" href="/">手紙を書く</a>
           </div>

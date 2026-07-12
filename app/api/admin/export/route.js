@@ -7,7 +7,9 @@ export const runtime = 'nodejs';
 
 function csvCell(v) {
   if (v === null || v === undefined) return '';
-  const s = String(v);
+  let s = String(v);
+  // CSVインジェクション対策: 数式として解釈されうる先頭文字を無害化する
+  if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
   if (/[",\r\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
   return s;
 }
