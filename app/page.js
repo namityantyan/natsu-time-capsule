@@ -43,8 +43,9 @@ export default function SubmitPage() {
       <section className="hero">
         <div className="hero-inner">
           <p className="eyebrow">{COPY.eyebrow}</p>
-          <h1 className="title">{COPY.title}</h1>
-          <p className="sub">{COPY.sub}</p>
+          <img className="hero-logo" src="/logo.png" alt="夏のタイムカプセル" width={1500} height={197} />
+          <p className="hero-sub-en">SUMMER TIME CAPSULE</p>
+          <p className="hero-meta">2026.09.12 ・ Spotify O-EAST</p>
           <p className="scroll-hint">scroll — 1年後の自分へ手紙を書く</p>
         </div>
       </section>

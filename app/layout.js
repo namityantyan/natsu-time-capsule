@@ -2,6 +2,7 @@ import './globals.css';
 import Particles from '../components/Particles';
 
 export const metadata = {
+  metadataBase: new URL('https://natsu-time-capsule.vercel.app'),
   title: '夏のタイムカプセル Letter',
   description: '1年後の自分への手紙を、デジタルのタイムカプセルに。Luna One-Man Live「夏のタイムカプセル」',
   // 検索エンジンにインデックスさせない（URLを知る人だけがアクセスできる状態にする）
@@ -10,6 +11,13 @@ export const metadata = {
     title: '夏のタイムカプセル Letter',
     description: '1年後の自分への手紙を、デジタルのタイムカプセルに。',
     type: 'website',
+    images: ['/og.jpg'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '夏のタイムカプセル Letter',
+    description: '1年後の自分への手紙を、デジタルのタイムカプセルに。',
+    images: ['/og.jpg'],
   },
 };
 
