@@ -123,7 +123,7 @@ a:hover { text-decoration: underline; }
 .cd-label { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(243,239,230,0.6); margin-top: 4px; font-family: var(--serif-en); }
 
 /* ===== form ===== */
-label.field { display: block; margin: 18px 0; }
+.field { display: block; margin: 20px 0; }
 .field .lab { display: block; font-size: 14px; margin-bottom: 8px; letter-spacing: 0.04em; }
 .field .req { color: var(--rose); margin-left: 6px; font-size: 12px; }
 input[type="text"], input[type="email"], input[type="password"], textarea, select {
