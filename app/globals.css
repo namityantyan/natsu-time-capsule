@@ -102,9 +102,16 @@ a:hover { text-decoration: underline; }
   text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 .scroll-hint {
-  margin-top: 40px; font-size: 12px; letter-spacing: 0.3em; color: rgba(74,54,38,0.9);
+  display: inline-block; margin-top: 40px;
+  padding: 11px 24px; border-radius: 999px;
+  font-size: 12px; letter-spacing: 0.3em; text-indent: 0.3em;
   text-transform: uppercase; font-family: var(--serif-en);
-  text-shadow: 0 1px 5px rgba(255,255,255,0.6), 0 0 2px rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.96);
+  background: rgba(64,48,36,0.22);
+  backdrop-filter: blur(12px) saturate(120%); -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow: 0 8px 22px rgba(58,42,30,0.16);
+  text-shadow: 0 1px 5px rgba(0,0,0,0.55);
 }
 
 /* ===== light glass panel ===== */
