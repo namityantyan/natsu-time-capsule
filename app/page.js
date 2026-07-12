@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Countdown from '../components/Countdown';
-import { COPY, BODY_MAX, NICKNAME_MAX } from '../lib/config';
+import { COPY, BODY_MAX, NICKNAME_MAX, SUBMISSIONS_OPEN } from '../lib/config';
 
 export default function SubmitPage() {
   const router = useRouter();
@@ -58,95 +58,102 @@ export default function SubmitPage() {
             <Countdown />
           </div>
 
-          <form className="panel" onSubmit={onSubmit}>
-            <h2>1年後の自分への手紙</h2>
-            <p className="muted small" style={{ marginTop: 4 }}>
-              いまの気持ちを、1年後のあなたへ。投稿は運営の確認後に公開されます。
-            </p>
+          {SUBMISSIONS_OPEN ? (
+            <form className="panel" onSubmit={onSubmit}>
+              <h2>1年後の自分への手紙</h2>
+              <p className="muted small" style={{ marginTop: 4 }}>
+                いまの気持ちを、1年後のあなたへ。投稿は運営の確認後に公開されます。
+              </p>
 
-            {/* ハニーポット: スパムボット除け。人間には見えず、入力されたらサーバー側で破棄する */}
-            <input
-              type="text"
-              name="website"
-              value={website}
-              onChange={(e) => setWebsite(e.target.value)}
-              tabIndex={-1}
-              autoComplete="off"
-              aria-hidden="true"
-              style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
-            />
-
-            <label className="field">
-              <span className="lab">ニックネーム<span className="req">必須</span></span>
+              {/* ハニーポット: スパムボット除け。人間には見えず、入力されたらサーバー側で破棄する */}
               <input
                 type="text"
-                value={nickname}
-                maxLength={NICKNAME_MAX}
-                onChange={(e) => setNickname(e.target.value)}
-                placeholder="呼ばれたい名前"
+                name="website"
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
               />
-            </label>
 
-            <label className="field">
-              <span className="lab">1年後の自分への手紙<span className="req">必須</span></span>
-              <textarea
-                value={body}
-                maxLength={BODY_MAX}
-                onChange={(e) => setBody(e.target.value)}
-                placeholder="今日のこと、これからのこと、未来の自分に伝えたいこと。"
-              />
-              <div className="counter">{body.length} / {BODY_MAX}</div>
-            </label>
+              <label className="field">
+                <span className="lab">ニックネーム<span className="req">必須</span></span>
+                <input
+                  type="text"
+                  value={nickname}
+                  maxLength={NICKNAME_MAX}
+                  onChange={(e) => setNickname(e.target.value)}
+                  placeholder="呼ばれたい名前"
+                />
+              </label>
 
-            <label className="field">
-              <span className="lab">メールアドレス<span className="muted"> 任意</span></span>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="1年後の公開をお知らせします（任意）"
-              />
-            </label>
+              <label className="field">
+                <span className="lab">1年後の自分への手紙<span className="req">必須</span></span>
+                <textarea
+                  value={body}
+                  maxLength={BODY_MAX}
+                  onChange={(e) => setBody(e.target.value)}
+                  placeholder="今日のこと、これからのこと、未来の自分に伝えたいこと。"
+                />
+                <div className="counter">{body.length} / {BODY_MAX}</div>
+              </label>
 
-            <div className="field">
-              <span className="lab">公開設定</span>
-              <div className="radio-row">
-                <label className={`radio-pill ${visibility === 'public' ? 'active' : ''}`}>
-                  <input
-                    type="radio"
-                    name="visibility"
-                    checked={visibility === 'public'}
-                    onChange={() => setVisibility('public')}
-                  />
-                  公開OK
-                </label>
-                <label className={`radio-pill ${visibility === 'private' ? 'active' : ''}`}>
-                  <input
-                    type="radio"
-                    name="visibility"
-                    checked={visibility === 'private'}
-                    onChange={() => setVisibility('private')}
-                  />
-                  公開しない
-                </label>
+              <label className="field">
+                <span className="lab">メールアドレス<span className="muted"> 任意</span></span>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="1年後の公開をお知らせします（任意）"
+                />
+              </label>
+
+              <div className="field">
+                <span className="lab">公開設定</span>
+                <div className="radio-row">
+                  <label className={`radio-pill ${visibility === 'public' ? 'active' : ''}`}>
+                    <input
+                      type="radio"
+                      name="visibility"
+                      checked={visibility === 'public'}
+                      onChange={() => setVisibility('public')}
+                    />
+                    公開OK
+                  </label>
+                  <label className={`radio-pill ${visibility === 'private' ? 'active' : ''}`}>
+                    <input
+                      type="radio"
+                      name="visibility"
+                      checked={visibility === 'private'}
+                      onChange={() => setVisibility('private')}
+                    />
+                    公開しない
+                  </label>
+                </div>
               </div>
+
+              <div className="notice">
+                安全のため、本名・住所・電話番号・学校名・勤務先など、個人が特定できる情報は書かないでください。
+              </div>
+
+              <label className="check">
+                <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
+                <span>個人が特定できる情報を書かないことに同意します。</span>
+              </label>
+
+              {error && <p className="err">{error}</p>}
+
+              <button className="btn" type="submit" disabled={sending}>
+                {sending ? '保存しています…' : 'タイムカプセルに保存する'}
+              </button>
+            </form>
+          ) : (
+            <div className="panel" style={{ textAlign: 'center' }}>
+              <h2>受付は終了しました</h2>
+              <p className="muted small">たくさんのご投稿ありがとうございました。公開日をお楽しみに。</p>
             </div>
-
-            <div className="notice">
-              安全のため、本名・住所・電話番号・学校名・勤務先など、個人が特定できる情報は書かないでください。
-            </div>
-
-            <label className="check">
-              <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
-              <span>個人が特定できる情報を書かないことに同意します。</span>
-            </label>
-
-            {error && <p className="err">{error}</p>}
-
-            <button className="btn" type="submit" disabled={sending}>
-              {sending ? '保存しています…' : 'タイムカプセルに保存する'}
-            </button>
-          </form>
+          )}
 
           <p className="toplinks">
             <a href="/letters">公開ページを見る</a>

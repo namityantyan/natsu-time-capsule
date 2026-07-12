@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getAdminClient } from '../../../lib/supabaseAdmin';
-import { isRevealed, BODY_MAX, NICKNAME_MAX } from '../../../lib/config';
+import { isRevealed, BODY_MAX, NICKNAME_MAX, LETTERS_SOURCE } from '../../../lib/config';
 import { isAuthed } from '../../../lib/auth';
+import lettersData from '../../../lib/letters-data.json';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -28,6 +29,10 @@ function rateLimited(ip) {
 
 // 手紙を投稿
 export async function POST(req) {
+  if (LETTERS_SOURCE === 'static') {
+    return NextResponse.json({ error: '手紙の受付は終了しました。' }, { status: 403 });
+  }
+
   let payload;
   try {
     payload = await req.json();
@@ -90,6 +95,16 @@ export async function GET(req) {
   }
   const { searchParams } = new URL(req.url);
   const mode = searchParams.get('mode') === 'random' ? 'random' : 'list';
+
+  if (LETTERS_SOURCE === 'static') {
+    let letters = [...lettersData].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+    if (mode === 'random' && letters.length > 0) {
+      letters = [letters[Math.floor(Math.random() * letters.length)]];
+    }
+    return NextResponse.json({ revealed, preview, letters });
+  }
 
   try {
     const supabase = getAdminClient();
