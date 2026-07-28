@@ -23,6 +23,8 @@ export default function SubmitPage() {
     if (!consent) return setError('個人情報を書かないことへの同意にチェックしてください。');
     if (!nickname.trim()) return setError('ニックネームを入力してください。');
     if (!body.trim()) return setError('手紙を入力してください。');
+    if (!email.trim()) return setError('メールアドレスを入力してください（1年後、この手紙を読むために必要です）。');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) return setError('メールアドレスの形式が正しくありません。');
 
     setSending(true);
     try {
@@ -86,7 +88,7 @@ export default function SubmitPage() {
                   value={nickname}
                   maxLength={NICKNAME_MAX}
                   onChange={(e) => setNickname(e.target.value)}
-                  placeholder="呼ばれたい名前"
+                  placeholder="公開される名前"
                 />
               </label>
 
@@ -96,13 +98,13 @@ export default function SubmitPage() {
                   value={body}
                   maxLength={BODY_MAX}
                   onChange={(e) => setBody(e.target.value)}
-                  placeholder="今日のこと、これからのこと、未来の自分に伝えたいこと。"
+                  placeholder="今日のこと、これからのこと、*Luna曲との思い出、未来の自分に伝えたいこと。"
                 />
                 <div className="counter">{body.length} / {BODY_MAX}</div>
               </label>
 
               <label className="field">
-                <span className="lab">思い出の*Luna曲<span className="muted"> 任意</span></span>
+                <span className="lab">思い出の*Luna曲<span className="muted">（任意）</span></span>
                 <input
                   type="text"
                   list="luna-songs"
@@ -117,12 +119,12 @@ export default function SubmitPage() {
               </datalist>
 
               <label className="field">
-                <span className="lab">メールアドレス<span className="muted"> 任意</span></span>
+                <span className="lab">メールアドレス<span className="req">必須</span></span>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="1年後の公開をお知らせします（任意）"
+                  placeholder="1年後、この手紙を読むための合言葉リンクをお送りします"
                 />
               </label>
 

@@ -1,7 +1,7 @@
+import crypto from 'crypto';
 import { NextResponse } from 'next/server';
-import { getAdminClient } from '../../../lib/supabaseAdmin';
-import { isRevealed, BODY_MAX, NICKNAME_MAX, LETTERS_SOURCE } from '../../../lib/config';
-import { isAuthed } from '../../../lib/auth';
+import { appendRow } from '../../../lib/sheets';
+import { isRevealed, BODY_MAX, NICKNAME_MAX, SUBMISSIONS_OPEN } from '../../../lib/config';
 import lettersData from '../../../lib/letters-data.json';
 
 export const dynamic = 'force-dynamic';
@@ -29,7 +29,7 @@ function rateLimited(ip) {
 
 // 手紙を投稿
 export async function POST(req) {
-  if (LETTERS_SOURCE === 'static') {
+  if (!SUBMISSIONS_OPEN) {
     return NextResponse.json({ error: '手紙の受付は終了しました。' }, { status: 403 });
   }
 
@@ -66,20 +66,24 @@ export async function POST(req) {
   if (!body || body.length > BODY_MAX) {
     return NextResponse.json({ error: `手紙は1〜${BODY_MAX}文字で入力してください。` }, { status: 400 });
   }
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return NextResponse.json({ error: 'メールアドレスの形式が正しくありません。' }, { status: 400 });
+  // メールは必須（1年後、この手紙を読むための合言葉リンクの届け先になる）
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return NextResponse.json({ error: 'メールアドレスを正しく入力してください。' }, { status: 400 });
   }
 
   try {
-    const supabase = getAdminClient();
-    const { error } = await supabase.from('letters').insert({
+    const token = crypto.randomUUID();
+    await appendRow([
+      new Date().toISOString(),
       nickname,
       body,
-      email: email || null,
+      song,
+      email,
       visibility,
-      song: song || null,
-    });
-    if (error) throw error;
+      token,
+      'pending',
+      'false',
+    ]);
     return NextResponse.json({ ok: true });
   } catch (e) {
     console.error('submit error', e);
@@ -87,45 +91,21 @@ export async function POST(req) {
   }
 }
 
-// 公開ページ用：公開日以降のみ、公開OK・承認済み・非表示でない手紙を返す
+// 公開ページ用：公開日以降のみ、承認済み・公開OKの手紙（静的に焼き込み済み）を返す
 export async function GET(req) {
   const revealed = isRevealed();
-  // 公開日前でも、管理者ログイン中はプレビュー表示できる
-  const preview = !revealed && isAuthed();
-  if (!revealed && !preview) {
-    return NextResponse.json({ revealed: false, preview: false, letters: [] });
+  if (!revealed) {
+    return NextResponse.json({ revealed: false, letters: [] });
   }
+
   const { searchParams } = new URL(req.url);
   const mode = searchParams.get('mode') === 'random' ? 'random' : 'list';
 
-  if (LETTERS_SOURCE === 'static') {
-    let letters = [...lettersData].sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
-    if (mode === 'random' && letters.length > 0) {
-      letters = [letters[Math.floor(Math.random() * letters.length)]];
-    }
-    return NextResponse.json({ revealed, preview, letters });
+  let letters = [...lettersData].sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+  if (mode === 'random' && letters.length > 0) {
+    letters = [letters[Math.floor(Math.random() * letters.length)]];
   }
-
-  try {
-    const supabase = getAdminClient();
-    const { data, error } = await supabase
-      .from('letters')
-      .select('id, nickname, body, created_at, song')
-      .eq('visibility', 'public')
-      .eq('approved', true)
-      .eq('hidden', false)
-      .order('created_at', { ascending: false });
-    if (error) throw error;
-
-    let letters = data || [];
-    if (mode === 'random' && letters.length > 0) {
-      letters = [letters[Math.floor(Math.random() * letters.length)]];
-    }
-    return NextResponse.json({ revealed, preview, letters });
-  } catch (e) {
-    console.error('list error', e);
-    return NextResponse.json({ error: '取得に失敗しました。' }, { status: 500 });
-  }
+  return NextResponse.json({ revealed, letters });
 }

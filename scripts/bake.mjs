@@ -1,9 +1,9 @@
 // 公開対象の手紙を lib/letters-data.json に焼き込むスクリプト。
 // 実行: npm run bake
-// 前提: /admin でのモデレーション（承認/非表示）が完了していること。
+// 前提: スプレッドシート上でモデレーション（status列を pending → approved/rejected）が完了していること。
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { createClient } from '@supabase/supabase-js';
+import { getRows } from '../lib/sheets.js';
 
 async function loadEnv() {
   try {
@@ -41,33 +41,26 @@ async function loadEnv() {
 async function main() {
   await loadEnv();
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) {
+  if (!process.env.GOOGLE_SERVICE_ACCOUNT_JSON || !process.env.SHEET_ID) {
     console.error(
-      'Supabase の環境変数が未設定です（NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY）。.env.local を確認してください。'
+      'Google の環境変数が未設定です（GOOGLE_SERVICE_ACCOUNT_JSON / SHEET_ID）。.env.local を確認してください。'
     );
     process.exit(1);
   }
 
-  const supabase = createClient(url, key, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
+  const rows = await getRows();
 
-  const { data, error } = await supabase
-    .from('letters')
-    .select('id, nickname, body, created_at, song')
-    .eq('visibility', 'public')
-    .eq('approved', true)
-    .eq('hidden', false)
-    .order('created_at', { ascending: false });
+  const letters = rows
+    .filter((r) => r.status === 'approved' && r.visibility === 'public')
+    .map((r, i) => ({
+      id: i + 1,
+      nickname: r.nickname || '',
+      body: r.body || '',
+      created_at: r.created_at || '',
+      song: r.song || undefined,
+    }))
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
-  if (error) {
-    console.error('取得に失敗しました:', error);
-    process.exit(1);
-  }
-
-  const letters = data || [];
   const outPath = path.join(process.cwd(), 'lib', 'letters-data.json');
   writeFileSync(outPath, JSON.stringify(letters, null, 2) + '\n', 'utf8');
 
