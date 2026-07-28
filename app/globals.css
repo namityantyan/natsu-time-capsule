@@ -36,16 +36,30 @@ body {
   overflow-x: hidden;
 }
 
-/* 紙吹雪 / 花びら */
+/* 空へ昇るチョーク落書き（成仏の演出） */
 .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-.particle {
-  position: absolute; top: -10vh; width: 8px; height: 8px;
-  border-radius: 50% 50% 50% 0; opacity: 0.5; animation: fall linear infinite;
+.particle-chalk {
+  position: absolute;
+  bottom: -12vh;
+  height: auto;
+  display: block;
+  /* 暖白グロー（KV暗部で映える）＋淡いダーク暖色シャドウ（クリーム地で輪郭を出す） */
+  filter: drop-shadow(0 0 4px rgba(255, 240, 220, 0.4)) drop-shadow(0 2px 3px rgba(70, 45, 25, 0.28));
+  animation-name: chalk-rise;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
 }
-@keyframes fall {
-  0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
-  10% { opacity: 0.7; } 90% { opacity: 0.6; }
-  100% { transform: translateY(115vh) rotate(420deg); opacity: 0; }
+@keyframes chalk-rise {
+  0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+  10% { opacity: var(--op, 0.4); }
+  30% { transform: translateY(-38vh) translateX(var(--sway, 16px)) rotate(calc(var(--rot, 20deg) * 0.4)); }
+  55% { transform: translateY(-68vh) translateX(calc(var(--sway, 16px) * -1)) rotate(calc(var(--rot, 20deg) * -0.6)); }
+  80% { transform: translateY(-98vh) translateX(var(--sway, 16px)) rotate(var(--rot, 20deg)); opacity: var(--op, 0.4); }
+  100% { transform: translateY(-125vh) translateX(0) rotate(calc(var(--rot, 20deg) * 0.7)); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .particle-chalk { animation: none !important; display: none; }
 }
 
 main { position: relative; z-index: 1; }
