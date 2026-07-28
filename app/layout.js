@@ -2,7 +2,7 @@ import './globals.css';
 import Particles from '../components/Particles';
 
 export const metadata = {
-  metadataBase: new URL('https://natsu-time-capsule.vercel.app'),
+  metadataBase: new URL('https://timecapsule.ast-luna.com'),
   title: '夏のタイムカプセル Letter',
   description: '1年後の自分への手紙を、デジタルのタイムカプセルに。Luna One-Man Live「夏のタイムカプセル」',
   // 検索エンジンにインデックスさせない（URLを知る人だけがアクセスできる状態にする）
