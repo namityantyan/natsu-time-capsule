@@ -13,6 +13,7 @@ function fmt(iso) {
 export default function LettersPage() {
   const [state, setState] = useState({ loading: true, revealed: false, preview: false, letters: [] });
   const [mode, setMode] = useState('list');
+  const [songFilter, setSongFilter] = useState('');
 
   const load = useCallback(async (m) => {
     setState((s) => ({ ...s, loading: true }));
@@ -26,6 +27,17 @@ export default function LettersPage() {
   }, []);
 
   useEffect(() => { load(mode); }, [mode, load]);
+
+  // モードを切り替えたら曲フィルタはリセット（ランダム抽出と噛み合わなくなるため）
+  useEffect(() => { setSongFilter(''); }, [mode]);
+
+  // 実際に使われている曲の一覧（読み込んだ手紙から抽出、五十音/文字コード順）
+  const songOptions = [...new Set(state.letters.map((l) => l.song).filter(Boolean))].sort((a, b) =>
+    a.localeCompare(b, 'ja')
+  );
+
+  // 選択中の曲があれば、その曲が紐づく手紙だけに絞り込む
+  const visibleLetters = songFilter ? state.letters.filter((l) => l.song === songFilter) : state.letters;
 
   // 手紙がビューに入ったら、チョークで書かれるように表示する
   useEffect(() => {
@@ -44,7 +56,7 @@ export default function LettersPage() {
     );
     cards.forEach((c) => io.observe(c));
     return () => io.disconnect();
-  }, [state.letters, state.loading]);
+  }, [state.letters, state.loading, songFilter]);
 
   // 公開前：ロック画面（管理者ログイン中はプレビュー表示するのでロックしない）
   if (!state.loading && !state.revealed && !state.preview) {
@@ -93,15 +105,32 @@ export default function LettersPage() {
           </div>
         )}
 
-        {state.loading && <p className="muted small" style={{ textAlign: 'center' }}>読み込み中…</p>}
-
-        {!state.loading && state.letters.length === 0 && (
-          <p className="muted small" style={{ textAlign: 'center' }}>まだ公開できる手紙がありません。</p>
+        {!state.loading && songOptions.length > 0 && (
+          <div className="song-filter">
+            <label>
+              <span className="lab">♪ この曲に寄せられた手紙</span>
+              <select value={songFilter} onChange={(e) => setSongFilter(e.target.value)}>
+                <option value="">すべて</option>
+                {songOptions.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </label>
+          </div>
         )}
 
-        {state.letters.map((l) => (
+        {state.loading && <p className="muted small" style={{ textAlign: 'center' }}>読み込み中…</p>}
+
+        {!state.loading && visibleLetters.length === 0 && (
+          <p className="muted small" style={{ textAlign: 'center' }}>
+            {songFilter ? 'この曲に紐づく手紙はまだありません。' : 'まだ公開できる手紙がありません。'}
+          </p>
+        )}
+
+        {visibleLetters.map((l) => (
           <article className="letter-card reveal" key={l.id}>
             <div className="letter-body">{l.body}</div>
+            {l.song && <div className="letter-song">♪ {l.song}</div>}
             <div className="letter-meta">
               <span>— {l.nickname}</span>
               <span className="date">{fmt(l.created_at)}</span>

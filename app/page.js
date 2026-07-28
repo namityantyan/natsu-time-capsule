@@ -3,11 +3,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Countdown from '../components/Countdown';
 import { COPY, BODY_MAX, NICKNAME_MAX, SUBMISSIONS_OPEN } from '../lib/config';
+import { SONGS } from '../lib/songs.js';
 
 export default function SubmitPage() {
   const router = useRouter();
   const [nickname, setNickname] = useState('');
   const [body, setBody] = useState('');
+  const [song, setSong] = useState('');
   const [email, setEmail] = useState('');
   const [visibility, setVisibility] = useState('public');
   const [consent, setConsent] = useState(false);
@@ -27,7 +29,7 @@ export default function SubmitPage() {
       const res = await fetch('/api/letters', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nickname, body, email, visibility, consent, website }),
+        body: JSON.stringify({ nickname, body, email, visibility, consent, website, song }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '送信に失敗しました。');
@@ -98,6 +100,21 @@ export default function SubmitPage() {
                 />
                 <div className="counter">{body.length} / {BODY_MAX}</div>
               </label>
+
+              <label className="field">
+                <span className="lab">思い出の*Luna曲<span className="muted"> 任意</span></span>
+                <input
+                  type="text"
+                  list="luna-songs"
+                  value={song}
+                  maxLength={100}
+                  onChange={(e) => setSong(e.target.value)}
+                  placeholder="曲名を入力/選択（この曲にまつわる思い出を手紙に…）"
+                />
+              </label>
+              <datalist id="luna-songs">
+                {SONGS.map((s) => <option key={s} value={s} />)}
+              </datalist>
 
               <label className="field">
                 <span className="lab">メールアドレス<span className="muted"> 任意</span></span>

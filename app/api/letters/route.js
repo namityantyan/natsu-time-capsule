@@ -53,6 +53,7 @@ export async function POST(req) {
   const nickname = String(payload.nickname || '').trim();
   const body = String(payload.body || '').trim();
   const email = String(payload.email || '').trim();
+  const song = String(payload.song || '').trim().slice(0, 100);
   const visibility = payload.visibility === 'private' ? 'private' : 'public';
   const consent = payload.consent === true;
 
@@ -76,6 +77,7 @@ export async function POST(req) {
       body,
       email: email || null,
       visibility,
+      song: song || null,
     });
     if (error) throw error;
     return NextResponse.json({ ok: true });
@@ -110,7 +112,7 @@ export async function GET(req) {
     const supabase = getAdminClient();
     const { data, error } = await supabase
       .from('letters')
-      .select('id, nickname, body, created_at')
+      .select('id, nickname, body, created_at, song')
       .eq('visibility', 'public')
       .eq('approved', true)
       .eq('hidden', false)

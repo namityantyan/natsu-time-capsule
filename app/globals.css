@@ -204,6 +204,14 @@ textarea { min-height: 170px; resize: vertical; line-height: 1.9; font-family: v
 }
 .mode-tabs button.active { color: var(--ink); border-color: var(--gold); background: rgba(224,152,42,0.14); }
 
+.song-filter { display: flex; justify-content: center; margin: 0 0 24px; }
+.song-filter label { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.song-filter .lab { font-size: 13px; color: var(--ink-soft); letter-spacing: 0.02em; }
+.song-filter select {
+  width: auto; background: rgba(255,255,255,0.72); border: 1px solid rgba(120,140,150,0.35);
+  border-radius: 999px; color: var(--ink); font-family: var(--serif-jp); font-size: 14px; padding: 8px 16px;
+}
+
 .letter-card {
   position: relative; overflow: hidden;
   background: linear-gradient(160deg, var(--board), var(--board-edge));
@@ -233,6 +241,12 @@ textarea { min-height: 170px; resize: vertical; line-height: 1.9; font-family: v
   6% { opacity: 1; }
   100% { opacity: 1; clip-path: inset(0 0 0 0); }
 }
+.letter-song {
+  position: relative; margin-top: 12px; font-size: 14px; font-family: var(--chalk-font);
+  color: #f2cd84; opacity: 0.85;
+}
+.letter-card.reveal .letter-song { opacity: 0; }
+.letter-card.reveal.drawn .letter-song { animation: fadeUp 0.7s ease 1.0s forwards; }
 .letter-meta {
   position: relative; margin-top: 18px; font-size: 15px; font-family: var(--chalk-font);
   color: #f2cd84; display: flex; justify-content: space-between; align-items: baseline;

@@ -56,7 +56,7 @@ async function main() {
 
   const { data, error } = await supabase
     .from('letters')
-    .select('id, nickname, body, created_at')
+    .select('id, nickname, body, created_at, song')
     .eq('visibility', 'public')
     .eq('approved', true)
     .eq('hidden', false)
