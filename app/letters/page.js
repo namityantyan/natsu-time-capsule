@@ -83,7 +83,7 @@ export default function LettersPage() {
       <section className="section" style={{ paddingTop: 60 }}>
         {state.preview && (
           <div className="preview-banner">
-            プレビュー表示中（管理者のみ）。公開日 2027年9月12日 までは、一般の人にはロック画面が表示されます。
+            プレビュー表示中（テスト・本番公開日前）。実際の公開は 2027年9月12日 です。
           </div>
         )}
         <div style={{ textAlign: 'center', marginBottom: 8 }}>

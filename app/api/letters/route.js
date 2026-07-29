@@ -94,8 +94,11 @@ export async function POST(req) {
 // 公開ページ用：公開日以降のみ、承認済み・公開OKの手紙（静的に焼き込み済み）を返す
 export async function GET(req) {
   const revealed = isRevealed();
-  if (!revealed) {
-    return NextResponse.json({ revealed: false, letters: [] });
+  // テスト用プレビュー解錠: PREVIEW_LETTERS=true なら公開日前でもポータルを表示できる。
+  // ⚠️ 本番の実手紙を集める前に必ず外すこと（付けたままだと公開日前に公開手紙が見える）。
+  const preview = !revealed && process.env.PREVIEW_LETTERS === 'true';
+  if (!revealed && !preview) {
+    return NextResponse.json({ revealed: false, preview: false, letters: [] });
   }
 
   const { searchParams } = new URL(req.url);
@@ -107,5 +110,5 @@ export async function GET(req) {
   if (mode === 'random' && letters.length > 0) {
     letters = [letters[Math.floor(Math.random() * letters.length)]];
   }
-  return NextResponse.json({ revealed, letters });
+  return NextResponse.json({ revealed, preview, letters });
 }
