@@ -195,6 +195,34 @@ textarea { min-height: 170px; resize: vertical; line-height: 1.9; font-family: v
 .btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
 .btn-row .btn { flex: 1; min-width: 180px; }
 
+/* ===== 手紙ポータルの背景（廃園の観覧車 key visual） ===== */
+/* 固定背景でスクロールしても奥に留まる。生成りのスクリムを重ね、世界観と可読性を両立 */
+.letters-scene::before {
+  content: ''; position: fixed; inset: 0; z-index: -2;
+  background: var(--sky-1) url('/ferris.jpg') center center / cover no-repeat;
+}
+.letters-scene::after {
+  content: ''; position: fixed; inset: 0; z-index: -1;
+  /* 上下は生成り濃いめ（文字の可読性）、中央は淡く絵を見せる */
+  background: linear-gradient(180deg,
+    rgba(246,234,216,0.64) 0%,
+    rgba(246,234,216,0.34) 20%,
+    rgba(246,234,216,0.24) 46%,
+    rgba(246,234,216,0.40) 72%,
+    rgba(246,234,216,0.72) 100%);
+}
+/* 見出し・説明文に生成りのハロを添えて、絵の上でも読みやすく */
+.letters-scene h2 { text-shadow: 0 1px 12px rgba(246,234,216,0.9), 0 1px 3px rgba(246,234,216,0.9); }
+.letters-scene .muted { text-shadow: 0 1px 8px rgba(246,234,216,0.85); }
+.letters-scene .toplinks a { text-shadow: 0 1px 8px rgba(246,234,216,0.95); }
+/* 「別の手紙を引く」ボタンは絵の上でも押せるよう、すりガラスの下地を付ける */
+.letters-scene .btn-ghost {
+  background: rgba(255,255,255,0.5);
+  backdrop-filter: blur(6px) saturate(120%); -webkit-backdrop-filter: blur(6px) saturate(120%);
+  border-color: rgba(255,255,255,0.7);
+}
+.letters-scene .btn-ghost:hover { background: rgba(255,255,255,0.68); }
+
 /* ===== letters (黒板 × チョーク) ===== */
 .mode-tabs { display: flex; gap: 10px; justify-content: center; margin: 8px 0 24px; }
 .mode-tabs button {
