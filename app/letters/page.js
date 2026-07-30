@@ -75,8 +75,7 @@ export default function LettersPage() {
           </div>
         )}
         <div style={{ textAlign: 'center', marginBottom: 8 }}>
-          <p className="eyebrow">Dear me, one summer later.</p>
-          <h2>みんなの手紙</h2>
+          <h2>誰かのタイムカプセル</h2>
           <p className="muted small">あの夏、誰かが1年後の自分へ宛てた言葉を、ランダムに1通。</p>
         </div>
 
