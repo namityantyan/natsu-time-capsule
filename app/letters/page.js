@@ -12,13 +12,12 @@ function fmt(iso) {
 
 export default function LettersPage() {
   const [state, setState] = useState({ loading: true, revealed: false, preview: false, letters: [] });
-  const [mode, setMode] = useState('list');
-  const [songFilter, setSongFilter] = useState('');
 
-  const load = useCallback(async (m) => {
+  // 常にランダムに1通だけ引く
+  const load = useCallback(async () => {
     setState((s) => ({ ...s, loading: true }));
     try {
-      const res = await fetch(`/api/letters?mode=${m}`, { cache: 'no-store' });
+      const res = await fetch('/api/letters?mode=random', { cache: 'no-store' });
       const data = await res.json();
       setState({ loading: false, revealed: !!data.revealed, preview: !!data.preview, letters: data.letters || [] });
     } catch {
@@ -26,18 +25,7 @@ export default function LettersPage() {
     }
   }, []);
 
-  useEffect(() => { load(mode); }, [mode, load]);
-
-  // モードを切り替えたら曲フィルタはリセット（ランダム抽出と噛み合わなくなるため）
-  useEffect(() => { setSongFilter(''); }, [mode]);
-
-  // 実際に使われている曲の一覧（読み込んだ手紙から抽出、五十音/文字コード順）
-  const songOptions = [...new Set(state.letters.map((l) => l.song).filter(Boolean))].sort((a, b) =>
-    a.localeCompare(b, 'ja')
-  );
-
-  // 選択中の曲があれば、その曲が紐づく手紙だけに絞り込む
-  const visibleLetters = songFilter ? state.letters.filter((l) => l.song === songFilter) : state.letters;
+  useEffect(() => { load(); }, [load]);
 
   // 手紙がビューに入ったら、チョークで書かれるように表示する
   useEffect(() => {
@@ -56,7 +44,7 @@ export default function LettersPage() {
     );
     cards.forEach((c) => io.observe(c));
     return () => io.disconnect();
-  }, [state.letters, state.loading, songFilter]);
+  }, [state.letters, state.loading]);
 
   // 公開前：ロック画面（管理者ログイン中はプレビュー表示するのでロックしない）
   if (!state.loading && !state.revealed && !state.preview) {
@@ -89,45 +77,22 @@ export default function LettersPage() {
         <div style={{ textAlign: 'center', marginBottom: 8 }}>
           <p className="eyebrow">Dear me, one summer later.</p>
           <h2>みんなの手紙</h2>
-          <p className="muted small">あの夏、誰かが1年後の自分へ宛てた言葉。</p>
+          <p className="muted small">あの夏、誰かが1年後の自分へ宛てた言葉を、ランダムに1通。</p>
         </div>
 
-        <div className="mode-tabs">
-          <button className={mode === 'list' ? 'active' : ''} onClick={() => setMode('list')}>一覧で読む</button>
-          <button className={mode === 'random' ? 'active' : ''} onClick={() => setMode('random')}>ランダムに1通</button>
+        <div style={{ textAlign: 'center', marginBottom: 18 }}>
+          <button className="btn btn-ghost" style={{ width: 'auto', padding: '10px 22px' }} onClick={() => load()}>
+            別の手紙を引く
+          </button>
         </div>
-
-        {mode === 'random' && (
-          <div style={{ textAlign: 'center', marginBottom: 18 }}>
-            <button className="btn btn-ghost" style={{ width: 'auto', padding: '10px 22px' }} onClick={() => load('random')}>
-              別の手紙を引く
-            </button>
-          </div>
-        )}
-
-        {!state.loading && songOptions.length > 0 && (
-          <div className="song-filter">
-            <label>
-              <span className="lab">♪ この曲に寄せられた手紙</span>
-              <select value={songFilter} onChange={(e) => setSongFilter(e.target.value)}>
-                <option value="">すべて</option>
-                {songOptions.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-            </label>
-          </div>
-        )}
 
         {state.loading && <p className="muted small" style={{ textAlign: 'center' }}>読み込み中…</p>}
 
-        {!state.loading && visibleLetters.length === 0 && (
-          <p className="muted small" style={{ textAlign: 'center' }}>
-            {songFilter ? 'この曲に紐づく手紙はまだありません。' : 'まだ公開できる手紙がありません。'}
-          </p>
+        {!state.loading && state.letters.length === 0 && (
+          <p className="muted small" style={{ textAlign: 'center' }}>まだ公開できる手紙がありません。</p>
         )}
 
-        {visibleLetters.map((l) => (
+        {state.letters.map((l) => (
           <article className="letter-card reveal" key={l.id}>
             <div className="letter-body">{l.body}</div>
             {l.song && <div className="letter-song">♪ {l.song}</div>}
