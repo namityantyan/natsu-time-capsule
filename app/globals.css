@@ -380,3 +380,17 @@ body:has(.letters-scene) .particles { display: none; }
 }
 .letters-scene .panel { background: rgba(16,15,12,0.55); border: 1px solid rgba(231,226,213,0.3); border-radius: 0; color: var(--bone); }
 .letters-scene .panel h2, .letters-scene .panel .muted { color: var(--bone); }
+
+/* --- 差し色：くすんだ朱色（NieRの系統色）を少量だけ --- */
+:root { --accent: #b04a38; }
+/* 見出しの下線を朱に */
+.letters-scene h2::after { background: var(--accent); width: 40px; height: 2px; }
+/* カード左上に朱のラベルタブ（HUDの識別マーカー風） */
+.letters-scene .letter-card::before {
+  display: block; content: ''; position: absolute; top: -1px; left: -1px;
+  width: 34px; height: 3px; background: var(--accent); opacity: 0.95; z-index: 1;
+}
+/* 曲の区切り線をほんのり朱に */
+.letters-scene .letter-song { border-top-color: rgba(176,74,56,0.38); }
+/* 「別の手紙を引く」hoverは朱で反転（選択＝行動のNieR的表現） */
+.letters-scene .btn-ghost:hover { background: var(--accent); color: #f3ece2; border-color: var(--accent); }
