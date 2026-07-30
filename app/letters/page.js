@@ -50,6 +50,7 @@ export default function LettersPage() {
   if (!state.loading && !state.revealed && !state.preview) {
     return (
       <div className="center-page letters-scene">
+        <div className="scene-grain" aria-hidden="true" />
         <div className="panel">
           <div className="icon">🔒</div>
           <h2 style={{ marginTop: 14 }}>まだ鍵がかかっています。</h2>
@@ -68,6 +69,7 @@ export default function LettersPage() {
   // 公開後
   return (
     <div className="wrap letters-scene">
+      <div className="scene-grain" aria-hidden="true" />
       <section className="section" style={{ paddingTop: 60 }}>
         {state.preview && (
           <div className="preview-banner">
