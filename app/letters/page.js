@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState, useCallback } from 'react';
 import Countdown from '../../components/Countdown';
+import MyLetterLookup from '../../components/MyLetterLookup';
 
 export default function LettersPage() {
   const [state, setState] = useState({ loading: true, revealed: false, preview: false, letters: [] });
@@ -53,6 +54,7 @@ export default function LettersPage() {
           <div className="btn-row">
             <a className="btn" href="/">手紙を書く</a>
           </div>
+          <MyLetterLookup />
         </div>
       </div>
     );
@@ -93,6 +95,8 @@ export default function LettersPage() {
             </div>
           </article>
         ))}
+
+        <MyLetterLookup />
 
         <p className="toplinks"><a href="/">手紙を書く</a></p>
       </section>

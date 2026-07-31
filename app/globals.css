@@ -352,3 +352,23 @@ body:has(.letters-scene) .particles { display: none; }
   box-shadow: 0 0 0 4px var(--paper-card), 0 0 0 5px var(--frame), 0 18px 40px rgba(60,50,35,0.14);
 }
 .letters-scene .panel h2, .letters-scene .panel .muted { color: var(--ink-p); }
+
+/* ===== 「自分の手紙を見る」照会フォーム（紙テーマ） ===== */
+.letters-scene .my-lookup { text-align: center; margin-top: 34px; padding-top: 26px; border-top: 1px solid var(--frame); }
+.letters-scene .my-lookup-form { display: flex; flex-direction: column; gap: 12px; align-items: stretch; max-width: 340px; margin: 4px auto 0; }
+.letters-scene .my-lookup-lead { color: var(--ink-soft-p); font-size: 13px; line-height: 1.8; margin: 0 0 4px; text-align: center; }
+.letters-scene .my-lookup input {
+  width: 100%; background: rgba(255,255,255,0.6); border: 1px solid var(--frame); border-radius: 2px;
+  color: var(--ink-p); font-family: var(--serif-jp); font-size: 15px; padding: 11px 13px;
+}
+.letters-scene .my-lookup input::placeholder { color: #a89f8e; }
+.letters-scene .my-lookup input:focus { outline: none; border-color: var(--rose); box-shadow: 0 0 0 3px rgba(167,106,99,0.18); }
+.letters-scene .my-lookup-submit {
+  width: 100%; background: var(--ink-p); color: var(--paper-card); border: none; border-radius: 2px;
+  padding: 13px 20px; font-family: var(--serif-jp); font-weight: 500; letter-spacing: 0.1em; cursor: pointer; box-shadow: none;
+}
+.letters-scene .my-lookup-submit:hover { background: #2c2820; }
+.letters-scene .my-lookup-submit:disabled { opacity: 0.6; cursor: default; }
+.letters-scene .my-lookup-note { color: var(--ink-p); font-size: 14px; line-height: 1.95; margin: 8px auto 0; max-width: 42ch; text-align: center; }
+.letters-scene .my-lookup-results { margin-top: 18px; }
+.letters-scene .my-lookup .err { text-align: center; }
