@@ -2,14 +2,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import Countdown from '../../components/Countdown';
 
-function fmt(iso) {
-  try {
-    return new Date(iso).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' });
-  } catch {
-    return '';
-  }
-}
-
 export default function LettersPage() {
   const [state, setState] = useState({ loading: true, revealed: false, preview: false, letters: [] });
 
@@ -78,7 +70,6 @@ export default function LettersPage() {
         )}
         <div style={{ textAlign: 'center', marginBottom: 8 }}>
           <h2>誰かのタイムカプセル</h2>
-          <p className="muted small">あの夏、誰かが1年後の自分へ宛てた言葉を、ランダムに1通。</p>
         </div>
 
         <div style={{ textAlign: 'center', marginBottom: 18 }}>
@@ -99,7 +90,6 @@ export default function LettersPage() {
             {l.song && <div className="letter-song">♪ {l.song}</div>}
             <div className="letter-meta">
               <span>— {l.nickname}</span>
-              <span className="date">{fmt(l.created_at)}</span>
             </div>
           </article>
         ))}
