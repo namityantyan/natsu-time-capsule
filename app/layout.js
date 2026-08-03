@@ -1,5 +1,7 @@
 import './globals.css';
 import Particles from '../components/Particles';
+import { CopyProvider } from '../components/CopyProvider';
+import { getCopy } from '../lib/copy';
 
 export const metadata = {
   metadataBase: new URL('https://timecapsule.ast-luna.com'),
@@ -27,12 +29,15 @@ export const viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const copy = await getCopy();
   return (
     <html lang="ja">
       <body>
         <Particles />
-        <main>{children}</main>
+        <CopyProvider value={copy}>
+          <main>{children}</main>
+        </CopyProvider>
         <footer>Luna — 夏のタイムカプセル</footer>
       </body>
     </html>

@@ -4,7 +4,7 @@ import { useState } from 'react';
 // 「自分の手紙を見る」照会フォーム。
 // 本人確認はメアド＋ニックネームの両方一致（サーバ側で照合）。
 // 公開日前は保管件数のみ、公開日後は本文を表示する。
-export default function MyLetterLookup() {
+export default function MyLetterLookup({ label = '自分の手紙を見る' }) {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
@@ -41,7 +41,7 @@ export default function MyLetterLookup() {
     <div className="my-lookup">
       {!open && (
         <button type="button" className="btn btn-ghost" style={{ width: 'auto', padding: '10px 22px' }} onClick={() => setOpen(true)}>
-          自分の手紙を見る
+          {label}
         </button>
       )}
 

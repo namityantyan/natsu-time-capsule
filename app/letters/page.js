@@ -2,9 +2,11 @@
 import { useEffect, useState, useCallback } from 'react';
 import Countdown from '../../components/Countdown';
 import MyLetterLookup from '../../components/MyLetterLookup';
+import { useCopy } from '../../components/CopyProvider';
 
 export default function LettersPage() {
   const [state, setState] = useState({ loading: true, revealed: false, preview: false, letters: [] });
+  const copy = useCopy();
 
   // 常にランダムに1通だけ引く
   const load = useCallback(async () => {
@@ -46,15 +48,15 @@ export default function LettersPage() {
         <div className="scene-grain" aria-hidden="true" />
         <div className="panel">
           <div className="icon">🔒</div>
-          <h2 style={{ marginTop: 14 }}>まだ鍵がかかっています。</h2>
-          <p className="muted small" style={{ marginTop: 10 }}>
-            タイムカプセルが開くのは 2027年9月12日 00:00。<br />それまで、手紙はそっと眠っています。
+          <h2 style={{ marginTop: 14 }}>{copy.locked_heading}</h2>
+          <p className="muted small" style={{ marginTop: 10, whiteSpace: 'pre-line' }}>
+            {copy.locked_body}
           </p>
           <Countdown reloadOnDone />
           <div className="btn-row">
             <a className="btn" href="/">手紙を書く</a>
           </div>
-          <MyLetterLookup />
+          <MyLetterLookup label={copy.lookup_button} />
         </div>
       </div>
     );
@@ -71,12 +73,12 @@ export default function LettersPage() {
           </div>
         )}
         <div style={{ textAlign: 'center', marginBottom: 8 }}>
-          <h2>誰かのタイムカプセル</h2>
+          <h2>{copy.letters_title}</h2>
         </div>
 
         <div style={{ textAlign: 'center', marginBottom: 18 }}>
           <button className="btn btn-ghost" style={{ width: 'auto', padding: '10px 22px' }} onClick={() => load()}>
-            別の手紙を引く
+            {copy.draw_button}
           </button>
         </div>
 
@@ -96,7 +98,7 @@ export default function LettersPage() {
           </article>
         ))}
 
-        <MyLetterLookup />
+        <MyLetterLookup label={copy.lookup_button} />
 
         <p className="toplinks"><a href="/">手紙を書く</a></p>
       </section>

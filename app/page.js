@@ -2,11 +2,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Countdown from '../components/Countdown';
-import { COPY, BODY_MAX, NICKNAME_MAX, SUBMISSIONS_OPEN } from '../lib/config';
+import { BODY_MAX, NICKNAME_MAX, SUBMISSIONS_OPEN } from '../lib/config';
 import { SONGS } from '../lib/songs.js';
+import { useCopy } from '../components/CopyProvider';
 
 export default function SubmitPage() {
   const router = useRouter();
+  const copy = useCopy();
   const [nickname, setNickname] = useState('');
   const [body, setBody] = useState('');
   const [song, setSong] = useState('');
@@ -46,27 +48,27 @@ export default function SubmitPage() {
     <>
       <section className="hero">
         <div className="hero-inner">
-          <p className="eyebrow">{COPY.eyebrow}</p>
+          <p className="eyebrow">{copy.hero_eyebrow}</p>
           <img className="hero-logo" src="/logo.png" alt="夏のタイムカプセル" width={1500} height={197} />
-          <p className="hero-sub-en">SUMMER TIME CAPSULE</p>
-          <p className="hero-meta">2026.09.12 ・ Spotify O-EAST</p>
-          <p className="scroll-hint">scroll — 1年後の自分へ手紙を書く</p>
+          <p className="hero-sub-en">{copy.hero_sub_en}</p>
+          <p className="hero-meta">{copy.hero_meta}</p>
+          <p className="scroll-hint">{copy.scroll_hint}</p>
         </div>
       </section>
 
       <div className="wrap">
         <section className="section">
           <div className="panel" style={{ textAlign: 'center', marginBottom: 28 }}>
-            <h2>開封まで</h2>
-            <p className="muted small">2027年9月12日 00:00 に、このタイムカプセルは開かれます。</p>
+            <h2>{copy.countdown_heading}</h2>
+            <p className="muted small">{copy.countdown_note}</p>
             <Countdown />
           </div>
 
           {SUBMISSIONS_OPEN ? (
             <form className="panel" onSubmit={onSubmit}>
-              <h2>1年後の自分への手紙</h2>
-              <p className="muted small" style={{ marginTop: 4 }}>
-                いまの気持ちを、1年後のあなたへ。投稿は運営の確認後に公開されます。
+              <h2>{copy.form_heading}</h2>
+              <p className="muted small" style={{ marginTop: 4, whiteSpace: 'pre-line' }}>
+                {copy.form_intro}
               </p>
 
               {/* ハニーポット: スパムボット除け。人間には見えず、入力されたらサーバー側で破棄する */}
@@ -152,8 +154,8 @@ export default function SubmitPage() {
                 </div>
               </div>
 
-              <div className="notice">
-                安全のため、本名・住所・電話番号・学校名・勤務先など、個人が特定できる情報は書かないでください。
+              <div className="notice" style={{ whiteSpace: 'pre-line' }}>
+                {copy.notice_text}
               </div>
 
               <label className="check">
@@ -164,7 +166,7 @@ export default function SubmitPage() {
               {error && <p className="err">{error}</p>}
 
               <button className="btn" type="submit" disabled={sending}>
-                {sending ? '保存しています…' : 'タイムカプセルに保存する'}
+                {sending ? '保存しています…' : copy.submit_button}
               </button>
             </form>
           ) : (

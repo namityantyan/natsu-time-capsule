@@ -1,16 +1,17 @@
 import Countdown from '../../components/Countdown';
+import { getCopy } from '../../lib/copy';
 
 export const metadata = { title: '保存しました — 夏のタイムカプセル' };
 
-export default function DonePage() {
+export default async function DonePage() {
+  const copy = await getCopy();
   return (
     <div className="center-page">
       <div className="panel">
         <div className="icon">✉️</div>
-        <h2 style={{ marginTop: 14 }}>タイムカプセルに保存されました</h2>
-        <p className="muted small" style={{ marginTop: 10 }}>
-          あなたの手紙は静かに眠りにつきました。<br />
-          2027年9月12日、もう一度ここで会いましょう。
+        <h2 style={{ marginTop: 14 }}>{copy.done_heading}</h2>
+        <p className="muted small" style={{ marginTop: 10, whiteSpace: 'pre-line' }}>
+          {copy.done_body}
         </p>
         <Countdown />
         <div className="btn-row">
