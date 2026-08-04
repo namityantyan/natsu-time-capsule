@@ -160,7 +160,7 @@ input[type="text"], input[type="email"], input[type="password"], textarea, selec
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 input:focus, textarea:focus, select:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(224,152,42,0.18); }
-textarea { min-height: 170px; resize: vertical; line-height: 1.9; font-family: var(--chalk-font); }
+textarea { min-height: 170px; resize: vertical; line-height: 1.9; font-family: var(--serif-jp); }
 .counter { text-align: right; font-size: 12px; color: var(--ink-soft); margin-top: 6px; }
 .radio-row { display: flex; gap: 12px; flex-wrap: wrap; }
 .radio-pill {
