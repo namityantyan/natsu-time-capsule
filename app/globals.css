@@ -43,8 +43,7 @@ body {
   bottom: -12vh;
   height: auto;
   display: block;
-  /* KVの落書きは淡い白チョークなので、細い暗色の縁＋柔らかい影でクリーム地でも輪郭が読めるようにする */
-  filter: drop-shadow(0 0 1px rgba(90, 60, 35, 0.6)) drop-shadow(0 0 1px rgba(90, 60, 35, 0.35)) drop-shadow(0 2px 4px rgba(70, 45, 25, 0.32));
+  /* 縁取り・影は付けず、KV素材そのままの色味で表示する */
   animation-name: chalk-rise;
   animation-timing-function: linear;
   animation-iteration-count: infinite;

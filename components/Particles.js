@@ -24,7 +24,7 @@ export default function Particles({ count = 14 }) {
         dur: 15 + rnd() * 15, // 15〜30秒
         size: 40 + rnd() * 48, // 40〜88px
         sprite: SPRITES[Math.floor(rnd() * SPRITES.length)],
-        op: 0.7 + rnd() * 0.25, // 0.7〜0.95（淡いチョーク素材なので高め）
+        op: 1, // 素材そのままの色味で表示（透過させない）
         sway: swaySign * (10 + rnd() * 22),
         rot: rotSign * (14 + rnd() * 22),
       });
