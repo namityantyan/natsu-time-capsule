@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState, useCallback } from 'react';
-import Countdown from '../../components/Countdown';
 import MyLetterLookup from '../../components/MyLetterLookup';
 import { useCopy } from '../../components/CopyProvider';
 
@@ -52,7 +51,6 @@ export default function LettersPage() {
           <p className="muted small" style={{ marginTop: 10, whiteSpace: 'pre-line' }}>
             {copy.locked_body}
           </p>
-          <Countdown reloadOnDone />
           <div className="btn-row">
             <a className="btn" href="/">手紙を書く</a>
           </div>
@@ -69,7 +67,7 @@ export default function LettersPage() {
       <section className="section" style={{ paddingTop: 60 }}>
         {state.preview && (
           <div className="preview-banner">
-            プレビュー表示中（テスト・本番公開日前）。実際の公開は 2027年9月12日 です。
+            プレビュー表示中（テスト用）。まだ一般には公開されていません。
           </div>
         )}
         <div style={{ textAlign: 'center', marginBottom: 8 }}>

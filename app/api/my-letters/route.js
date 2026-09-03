@@ -27,7 +27,7 @@ function rateLimited(ip) {
 const norm = (s) => String(s || '').trim().toLowerCase();
 
 // 自分の手紙の照会。本人確認は「メールアドレス＋ニックネームの両方一致」。
-// 公開日前は本文を返さず、保管件数のみ返す（封印コンセプトの維持）。
+// 開封前は本文を返さず、保管件数のみ返す（封印コンセプトの維持）。
 export async function POST(req) {
   let payload;
   try {
@@ -57,12 +57,12 @@ export async function POST(req) {
       (r) => norm(r.email) === norm(email) && norm(r.nickname) === norm(nickname) && r.status !== 'rejected'
     );
 
-    // 公開日前：本文は返さず、保管件数のみ（メアド・トークンも一切返さない）
+    // 開封前：本文は返さず、保管件数のみ（メアド・トークンも一切返さない）
     if (!isRevealed()) {
       return NextResponse.json({ revealed: false, count: matches.length });
     }
 
-    // 公開日後：本人の手紙は公開/非公開を問わず本文を返す
+    // 開封後：本人の手紙は公開/非公開を問わず本文を返す
     const letters = matches.map((r) => ({
       nickname: r.nickname || '',
       body: r.body || '',

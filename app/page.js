@@ -1,7 +1,6 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Countdown from '../components/Countdown';
 import { BODY_MAX, NICKNAME_MAX, SUBMISSIONS_OPEN } from '../lib/config';
 import { SONGS } from '../lib/songs.js';
 import { useCopy } from '../components/CopyProvider';
@@ -25,7 +24,7 @@ export default function SubmitPage() {
     if (!consent) return setError('個人情報を書かないことへの同意にチェックしてください。');
     if (!nickname.trim()) return setError('ニックネームを入力してください。');
     if (!body.trim()) return setError('手紙を入力してください。');
-    if (!email.trim()) return setError('メールアドレスを入力してください（1年後、この手紙を読むために必要です）。');
+    if (!email.trim()) return setError('メールアドレスを入力してください（いつか、この手紙を読むために必要です）。');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) return setError('メールアドレスの形式が正しくありません。');
 
     setSending(true);
@@ -58,12 +57,6 @@ export default function SubmitPage() {
 
       <div className="wrap">
         <section className="section">
-          <div className="panel" style={{ textAlign: 'center', marginBottom: 28 }}>
-            <h2>{copy.countdown_heading}</h2>
-            <p className="muted small">{copy.countdown_note}</p>
-            <Countdown />
-          </div>
-
           {SUBMISSIONS_OPEN ? (
             <form className="panel" onSubmit={onSubmit}>
               <h2>{copy.form_heading}</h2>
@@ -95,7 +88,7 @@ export default function SubmitPage() {
               </label>
 
               <label className="field">
-                <span className="lab">1年後の自分への手紙<span className="req">必須</span></span>
+                <span className="lab">いつかの自分への手紙<span className="req">必須</span></span>
                 <textarea
                   value={body}
                   maxLength={BODY_MAX}
@@ -126,7 +119,7 @@ export default function SubmitPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="1年後、この手紙を読むための合言葉リンクをお送りします"
+                  placeholder="手紙を読むときの本人確認に使います（公開はされません）"
                 />
               </label>
 
@@ -172,7 +165,7 @@ export default function SubmitPage() {
           ) : (
             <div className="panel" style={{ textAlign: 'center' }}>
               <h2>受付は終了しました</h2>
-              <p className="muted small">たくさんのご投稿ありがとうございました。公開日をお楽しみに。</p>
+              <p className="muted small">たくさんのご投稿ありがとうございました。いつか開かれる日をお楽しみに。</p>
             </div>
           )}
 

@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 // 「自分の手紙を見る」照会フォーム。
 // 本人確認はメアド＋ニックネームの両方一致（サーバ側で照合）。
-// 公開日前は保管件数のみ、公開日後は本文を表示する。
+// 開封前は保管件数のみ、開封後は本文を表示する。
 export default function MyLetterLookup({ label = '自分の手紙を見る' }) {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState('');
@@ -72,7 +72,7 @@ export default function MyLetterLookup({ label = '自分の手紙を見る' }) {
           {result && !result.revealed && (
             <p className="my-lookup-note">
               {result.count > 0
-                ? `「${nickname.trim()}」名義の手紙が ${result.count} 通、大切に保管されています。公開日（2027年9月12日）に、ここで読めます。`
+                ? `「${nickname.trim()}」名義の手紙が ${result.count} 通、大切に保管されています。いつか開かれる日に、ここで読めます。`
                 : 'その組み合わせの手紙は見つかりませんでした。メールアドレスとニックネームをご確認ください。'}
             </p>
           )}

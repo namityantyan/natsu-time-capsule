@@ -140,16 +140,6 @@ a:hover { text-decoration: underline; }
 .muted { color: var(--ink-soft); }
 .small { font-size: 13px; line-height: 1.7; }
 
-/* ===== countdown (黒板タイル) ===== */
-.countdown { display: flex; gap: 14px; justify-content: center; margin: 22px 0; flex-wrap: wrap; }
-.cd-unit {
-  min-width: 72px; padding: 14px 10px; border-radius: 14px;
-  background: var(--board); border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: inset 0 0 26px rgba(0,0,0,0.3);
-}
-.cd-num { font-family: var(--chalk-font); font-size: clamp(24px, 6vw, 34px); color: var(--chalk); text-shadow: 0 0 1px rgba(255,255,255,0.4); }
-.cd-label { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(243,239,230,0.6); margin-top: 4px; font-family: var(--serif-en); }
-
 /* ===== form ===== */
 .field { display: block; margin: 20px 0; }
 .field .lab { display: block; font-size: 14px; margin-bottom: 8px; letter-spacing: 0.04em; }
