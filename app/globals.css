@@ -43,8 +43,8 @@ body {
   bottom: -12vh;
   height: auto;
   display: block;
-  /* 暖白グロー（KV暗部で映える）＋淡いダーク暖色シャドウ（クリーム地で輪郭を出す） */
-  filter: drop-shadow(0 0 4px rgba(255, 240, 220, 0.4)) drop-shadow(0 2px 3px rgba(70, 45, 25, 0.28));
+  /* KVの落書きは淡い白チョークなので、細い暗色の縁＋柔らかい影でクリーム地でも輪郭が読めるようにする */
+  filter: drop-shadow(0 0 1px rgba(90, 60, 35, 0.6)) drop-shadow(0 0 1px rgba(90, 60, 35, 0.35)) drop-shadow(0 2px 4px rgba(70, 45, 25, 0.32));
   animation-name: chalk-rise;
   animation-timing-function: linear;
   animation-iteration-count: infinite;

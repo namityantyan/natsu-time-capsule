@@ -4,20 +4,8 @@ import { useMemo } from 'react';
 // 廃園に漂う思い出の落書き（チョークスプライト）が、ゆっくり空へ昇っていく。
 // SSR とクライアントで値がズレないよう、シード付き擬似乱数で一度だけ生成。
 
-// クリーム地でも視認できる彩度のあるモチーフに厳選（白系のbird-a/spark/starは
-// クリーム背景でほぼ消えるため不採用）。
-const SPRITES = [
-  'flower',
-  'bird-b',
-  'heart',
-  'butterfly',
-  'note-a',
-  'note-b',
-  'spiral',
-  'moon',
-  'star-b',
-  'rainbow',
-];
+// KVイラストから切り出した公式の落書きパーツ（public/doodles/kv-01〜33.png）を使う。
+const SPRITES = Array.from({ length: 33 }, (_, i) => `kv-${String(i + 1).padStart(2, '0')}`);
 
 export default function Particles({ count = 14 }) {
   const items = useMemo(() => {
@@ -36,7 +24,7 @@ export default function Particles({ count = 14 }) {
         dur: 15 + rnd() * 15, // 15〜30秒
         size: 40 + rnd() * 48, // 40〜88px
         sprite: SPRITES[Math.floor(rnd() * SPRITES.length)],
-        op: 0.5 + rnd() * 0.3, // 0.5〜0.8
+        op: 0.7 + rnd() * 0.25, // 0.7〜0.95（淡いチョーク素材なので高め）
         sway: swaySign * (10 + rnd() * 22),
         rot: rotSign * (14 + rnd() * 22),
       });
