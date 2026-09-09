@@ -140,7 +140,7 @@ a:hover { text-decoration: underline; }
 #write { scroll-margin-top: 12px; }
 /* スマホ幅ではSCROLLボタンのラベルを1行に収める（字間・余白を詰める） */
 @media (max-width: 480px) {
-  .hero { padding-bottom: calc(clamp(76px, 17svh, 150px) + env(safe-area-inset-bottom, 0px)); }
+  .hero { padding-bottom: calc(clamp(40px, 8svh, 90px) + env(safe-area-inset-bottom, 0px)); } /* svhでツールバー分は除外済みなので余白は控えめに */
   /* 縦長画面ではイラストを少し拡大し下端基準に置くことで、女の子が上に来て文字ブロックが足元に乗る構図にする */
   .hero { background-size: auto 118%; background-position: center 100%; }
   .eyebrow { margin-bottom: 10px; }
