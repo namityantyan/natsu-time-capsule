@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BODY_MAX, NICKNAME_MAX, SUBMISSIONS_OPEN } from '../lib/config';
-import { SONGS } from '../lib/songs.js';
 import { useCopy } from '../components/CopyProvider';
 
 export default function SubmitPage() {
@@ -102,16 +101,12 @@ export default function SubmitPage() {
                 <span className="lab">思い出の*Luna曲<span className="muted">（任意）</span></span>
                 <input
                   type="text"
-                  list="luna-songs"
                   value={song}
                   maxLength={100}
                   onChange={(e) => setSong(e.target.value)}
-                  placeholder="曲名を入力/選択（この曲にまつわる思い出を手紙に…）"
+                  placeholder="曲名を入力（この曲にまつわる思い出を手紙に…）"
                 />
               </label>
-              <datalist id="luna-songs">
-                {SONGS.map((s) => <option key={s} value={s} />)}
-              </datalist>
 
               <label className="field">
                 <span className="lab">メールアドレス<span className="req">必須</span></span>
