@@ -108,8 +108,9 @@ export default function SubmitPage() {
                   value={song}
                   maxLength={100}
                   onChange={(e) => setSong(e.target.value)}
-                  placeholder="曲名を入力（この曲にまつわる思い出を手紙に…）"
+                  placeholder="曲名を入力"
                 />
+                <span className="hint">この曲にまつわる思い出を、手紙に添えてみてください。</span>
               </label>
 
               <label className="field">
@@ -118,8 +119,9 @@ export default function SubmitPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="手紙を読むときの本人確認に使います（公開はされません）"
+                  placeholder="example@mail.com"
                 />
+                <span className="hint">手紙を読むときの本人確認に使います（公開はされません）。</span>
               </label>
 
               <div className="field">
