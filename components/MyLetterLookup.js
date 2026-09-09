@@ -84,7 +84,7 @@ export default function MyLetterLookup({ label = '自分の手紙を見る', onO
           {result && !result.revealed && (
             <p className="my-lookup-note">
               {result.count > 0
-                ? `「${nickname.trim()}」名義の手紙が ${result.count} 通、大切に保管されています。いつか開かれる日に、ここで読めます。`
+                ? `「${nickname.trim()}」名義の手紙が ${result.count} 通、大切に保管されています。いつか開かれる夏にまたお会いしましょう！`
                 : 'その組み合わせの手紙は見つかりませんでした。メールアドレスとニックネームをご確認ください。'}
             </p>
           )}
