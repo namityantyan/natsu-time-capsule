@@ -104,17 +104,6 @@ export default function SubmitClient({ submissionsOpen = true }) {
               </label>
 
               <label className="field">
-                <span className="lab">いつかの自分への手紙<span className="req">必須</span></span>
-                <textarea
-                  value={body}
-                  maxLength={BODY_MAX}
-                  onChange={(e) => setBody(e.target.value)}
-                  placeholder="今日のこと、これからのこと、*Luna曲との思い出、未来の自分に伝えたいこと。"
-                />
-                <div className="counter">{body.length} / {BODY_MAX}</div>
-              </label>
-
-              <label className="field">
                 <span className="lab">思い出の*Luna曲<span className="muted">（任意）</span></span>
                 <input
                   type="text"
@@ -124,6 +113,17 @@ export default function SubmitClient({ submissionsOpen = true }) {
                   placeholder="曲名を入力"
                 />
                 <span className="hint">この曲にまつわる思い出を、手紙に添えてみてください。</span>
+              </label>
+
+              <label className="field">
+                <span className="lab">いつかの自分への手紙<span className="req">必須</span></span>
+                <textarea
+                  value={body}
+                  maxLength={BODY_MAX}
+                  onChange={(e) => setBody(e.target.value)}
+                  placeholder="今日のこと、これからのこと、*Luna曲との思い出、未来の自分に伝えたいこと。"
+                />
+                <div className="counter">{body.length} / {BODY_MAX}</div>
               </label>
 
               <label className="field">
