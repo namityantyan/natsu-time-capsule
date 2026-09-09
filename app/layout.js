@@ -38,7 +38,7 @@ export default async function RootLayout({ children }) {
         <CopyProvider value={copy}>
           <main>{children}</main>
         </CopyProvider>
-        <footer>Luna — 夏のタイムカプセル</footer>
+        <footer>*Luna — 夏のタイムカプセル</footer>
       </body>
     </html>
   );
