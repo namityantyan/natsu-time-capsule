@@ -6,13 +6,11 @@ import { useCopy } from '../../components/CopyProvider';
 export default function LettersPage() {
   const [state, setState] = useState({ loading: true, revealed: false, preview: false, letters: [] });
   const copy = useCopy();
-  const [lookupOpen, setLookupOpen] = useState(false); // 「自分の手紙を見る」を開いている間は true
-  // 「閉じる」で戻った直後は、隠していたカードをフェードなしで即表示する（再マウント時にIOが効かないため）
-  const [returned, setReturned] = useState(false);
+  // 表示モード: idle=2つのボタン / someone=誰かの手紙（ランダム） / mine=自分の手紙（照会フォーム）
+  const [view, setView] = useState('idle');
 
   // 常にランダムに1通だけ引く
   const load = useCallback(async () => {
-    setReturned(false); // 新しく引いた手紙は従来どおりフェードで現す
     setState((s) => ({ ...s, loading: true }));
     try {
       const res = await fetch('/api/letters?mode=random', { cache: 'no-store' });
@@ -24,25 +22,6 @@ export default function LettersPage() {
   }, []);
 
   useEffect(() => { load(); }, [load]);
-
-  // 手紙がビューに入ったら、チョークで書かれるように表示する
-  useEffect(() => {
-    if (state.loading) return;
-    const cards = document.querySelectorAll('.letter-card');
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add('drawn');
-            io.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-    cards.forEach((c) => io.observe(c));
-    return () => io.disconnect();
-  }, [state.letters, state.loading]);
 
   // 公開前：ロック画面（管理者ログイン中はプレビュー表示するのでロックしない）
   if (!state.loading && !state.revealed && !state.preview) {
@@ -78,40 +57,60 @@ export default function LettersPage() {
           <h2>{copy.letters_title}</h2>
         </div>
 
-        {/* 「自分の手紙を見る」を開いている間は、ランダムの手紙と引き直しボタンを隠して自分の手紙に集中させる */}
-        {!lookupOpen && (
-          <>
-            <div style={{ textAlign: 'center', marginBottom: 18 }}>
-              <button className="btn btn-ghost" style={{ width: 'auto', padding: '10px 22px' }} onClick={() => load()}>
-                {copy.draw_button}
-              </button>
-            </div>
+        {/* 最初は「誰かの手紙を見る」「自分の手紙を見る」の2択。選んだ方だけを表示し、「閉じる」で戻る。
+            各ブロックの外枠は常に描画してツリー位置を固定し、照会フォームの状態が消えないようにする */}
+        <div className="portal-actions">
+          {view === 'idle' && (
+            <button
+              className="btn btn-ghost"
+              style={{ width: 'auto', padding: '10px 22px' }}
+              onClick={() => {
+                setView('someone');
+                load(); // 新しく1通引く（取得完了時にカードがフェードで現れる）
+              }}
+            >
+              {copy.someone_button}
+            </button>
+          )}
+        </div>
 
-            {state.loading && <p className="muted small" style={{ textAlign: 'center' }}>読み込み中…</p>}
+        <div className="portal-someone">
+          {view === 'someone' && (
+            <>
+              <div style={{ textAlign: 'center', marginBottom: 18 }}>
+                <button className="btn btn-ghost" style={{ width: 'auto', padding: '10px 22px' }} onClick={() => load()}>
+                  {copy.draw_button}
+                </button>
+              </div>
 
-            {!state.loading && state.letters.length === 0 && (
-              <p className="muted small" style={{ textAlign: 'center' }}>まだ公開できる手紙がありません。</p>
-            )}
+              {state.loading && <p className="muted small" style={{ textAlign: 'center' }}>読み込み中…</p>}
 
-            {state.letters.map((l) => (
-              <article className={returned ? 'letter-card' : 'letter-card reveal'} key={l.id}>
-                <div className="letter-body">{l.body}</div>
-                {l.song && <div className="letter-song">♪ {l.song}</div>}
-                <div className="letter-meta">
-                  <span>— {l.nickname}</span>
-                </div>
-              </article>
-            ))}
-          </>
-        )}
+              {!state.loading && state.letters.length === 0 && (
+                <p className="muted small" style={{ textAlign: 'center' }}>まだ公開できる手紙がありません。</p>
+              )}
 
-        <MyLetterLookup
-          label={copy.lookup_button}
-          onOpenChange={(v) => {
-            setLookupOpen(v);
-            if (!v) setReturned(true);
-          }}
-        />
+              {state.letters.map((l) => (
+                <article className="letter-card enter" key={l.id}>
+                  <div className="letter-body">{l.body}</div>
+                  {l.song && <div className="letter-song">♪ {l.song}</div>}
+                  <div className="letter-meta">
+                    <span>— {l.nickname}</span>
+                  </div>
+                </article>
+              ))}
+
+              <div style={{ textAlign: 'center', marginTop: 6 }}>
+                <button type="button" className="my-lookup-close" onClick={() => setView('idle')}>閉じる</button>
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className={`portal-mine${view === 'idle' ? ' idle' : ''}`}>
+          {view !== 'someone' && (
+            <MyLetterLookup label={copy.lookup_button} onOpenChange={(v) => setView(v ? 'mine' : 'idle')} />
+          )}
+        </div>
 
         <p className="toplinks"><a href="/">手紙を書く</a></p>
       </section>

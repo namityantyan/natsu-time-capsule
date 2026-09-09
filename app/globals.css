@@ -380,3 +380,12 @@ body:has(.letters-scene) .particles { display: none; }
   text-decoration: underline dotted; text-underline-offset: 4px;
 }
 .letters-scene .my-lookup-close:hover { color: var(--ink-p); }
+/* 公開ページの最初の2択（誰かの手紙 / 自分の手紙）。idle のときは区切り線を出さず、ボタン2つを縦に並べる */
+.letters-scene .portal-actions { text-align: center; margin-top: 10px; }
+.letters-scene .portal-mine.idle .my-lookup { border-top: none; margin-top: 14px; padding-top: 0; }
+/* 手紙カードの出現：観測に頼らず、マウント（表示）のたびにCSSアニメで現す */
+@keyframes cardIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.letters-scene .letter-card.enter { animation: cardIn 0.6s ease both; }
+.letters-scene .letter-card.enter .letter-body { animation: fadeUp 0.9s ease 0.1s both; }
+.letters-scene .letter-card.enter .letter-song { animation: fadeUp 0.7s ease 0.9s both; }
+.letters-scene .letter-card.enter .letter-meta { animation: fadeUp 0.7s ease 1.0s both; }
