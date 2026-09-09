@@ -6,9 +6,13 @@ import { useCopy } from '../../components/CopyProvider';
 export default function LettersPage() {
   const [state, setState] = useState({ loading: true, revealed: false, preview: false, letters: [] });
   const copy = useCopy();
+  const [lookupOpen, setLookupOpen] = useState(false); // 「自分の手紙を見る」を開いている間は true
+  // 「閉じる」で戻った直後は、隠していたカードをフェードなしで即表示する（再マウント時にIOが効かないため）
+  const [returned, setReturned] = useState(false);
 
   // 常にランダムに1通だけ引く
   const load = useCallback(async () => {
+    setReturned(false); // 新しく引いた手紙は従来どおりフェードで現す
     setState((s) => ({ ...s, loading: true }));
     try {
       const res = await fetch('/api/letters?mode=random', { cache: 'no-store' });
@@ -74,29 +78,40 @@ export default function LettersPage() {
           <h2>{copy.letters_title}</h2>
         </div>
 
-        <div style={{ textAlign: 'center', marginBottom: 18 }}>
-          <button className="btn btn-ghost" style={{ width: 'auto', padding: '10px 22px' }} onClick={() => load()}>
-            {copy.draw_button}
-          </button>
-        </div>
+        {/* 「自分の手紙を見る」を開いている間は、ランダムの手紙と引き直しボタンを隠して自分の手紙に集中させる */}
+        {!lookupOpen && (
+          <>
+            <div style={{ textAlign: 'center', marginBottom: 18 }}>
+              <button className="btn btn-ghost" style={{ width: 'auto', padding: '10px 22px' }} onClick={() => load()}>
+                {copy.draw_button}
+              </button>
+            </div>
 
-        {state.loading && <p className="muted small" style={{ textAlign: 'center' }}>読み込み中…</p>}
+            {state.loading && <p className="muted small" style={{ textAlign: 'center' }}>読み込み中…</p>}
 
-        {!state.loading && state.letters.length === 0 && (
-          <p className="muted small" style={{ textAlign: 'center' }}>まだ公開できる手紙がありません。</p>
+            {!state.loading && state.letters.length === 0 && (
+              <p className="muted small" style={{ textAlign: 'center' }}>まだ公開できる手紙がありません。</p>
+            )}
+
+            {state.letters.map((l) => (
+              <article className={returned ? 'letter-card' : 'letter-card reveal'} key={l.id}>
+                <div className="letter-body">{l.body}</div>
+                {l.song && <div className="letter-song">♪ {l.song}</div>}
+                <div className="letter-meta">
+                  <span>— {l.nickname}</span>
+                </div>
+              </article>
+            ))}
+          </>
         )}
 
-        {state.letters.map((l) => (
-          <article className="letter-card reveal" key={l.id}>
-            <div className="letter-body">{l.body}</div>
-            {l.song && <div className="letter-song">♪ {l.song}</div>}
-            <div className="letter-meta">
-              <span>— {l.nickname}</span>
-            </div>
-          </article>
-        ))}
-
-        <MyLetterLookup label={copy.lookup_button} />
+        <MyLetterLookup
+          label={copy.lookup_button}
+          onOpenChange={(v) => {
+            setLookupOpen(v);
+            if (!v) setReturned(true);
+          }}
+        />
 
         <p className="toplinks"><a href="/">手紙を書く</a></p>
       </section>

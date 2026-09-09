@@ -373,3 +373,10 @@ body:has(.letters-scene) .particles { display: none; }
 .receipt-rows dt { flex: 0 0 7.5em; font-size: 12px; color: var(--ink-soft); }
 .receipt-rows dd { margin: 0; font-size: 16px; font-weight: 600; color: var(--ink); word-break: break-all; }
 .receipt-hint { margin: 10px 0 0; font-size: 12px; line-height: 1.7; color: var(--ink-soft); }
+/* 「自分の手紙を見る」を閉じて、ランダムの手紙に戻る */
+.letters-scene .my-lookup-close {
+  align-self: center; background: none; border: none; cursor: pointer; padding: 6px 10px;
+  font-family: var(--serif-jp); font-size: 13px; letter-spacing: 0.1em; color: var(--ink-soft-p);
+  text-decoration: underline dotted; text-underline-offset: 4px;
+}
+.letters-scene .my-lookup-close:hover { color: var(--ink-p); }

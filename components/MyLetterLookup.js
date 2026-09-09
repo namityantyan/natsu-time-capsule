@@ -4,8 +4,18 @@ import { useState } from 'react';
 // 「自分の手紙を見る」照会フォーム。
 // 本人確認はメアド＋ニックネームの両方一致（サーバ側で照合）。
 // 開封前は保管件数のみ、開封後は本文を表示する。
-export default function MyLetterLookup({ label = '自分の手紙を見る' }) {
-  const [open, setOpen] = useState(false);
+export default function MyLetterLookup({ label = '自分の手紙を見る', onOpenChange }) {
+  const [open, setOpenState] = useState(false);
+  // 開閉を親に知らせる（開いている間、ページ側はランダムの手紙を隠す）
+  function setOpen(v) {
+    setOpenState(v);
+    if (onOpenChange) onOpenChange(v);
+  }
+  function close() {
+    setError('');
+    setResult(null);
+    setOpen(false);
+  }
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
   const [loading, setLoading] = useState(false);
@@ -68,6 +78,8 @@ export default function MyLetterLookup({ label = '自分の手紙を見る' }) {
           </button>
 
           {error && <p className="err">{error}</p>}
+
+          <button type="button" className="my-lookup-close" onClick={close}>閉じる</button>
 
           {result && !result.revealed && (
             <p className="my-lookup-note">
