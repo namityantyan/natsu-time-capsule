@@ -1,4 +1,5 @@
 import { getCopy } from '../../lib/copy';
+import SubmitReceipt from '../../components/SubmitReceipt';
 
 export const metadata = { title: '保存しました — 夏のタイムカプセル' };
 
@@ -12,6 +13,7 @@ export default async function DonePage() {
         <p className="muted small" style={{ marginTop: 10, whiteSpace: 'pre-line' }}>
           {copy.done_body}
         </p>
+        <SubmitReceipt />
         <div className="btn-row">
           <a className="btn btn-ghost" href="/">もう1通書く</a>
           <a className="btn" href="/letters">公開ページを見る</a>

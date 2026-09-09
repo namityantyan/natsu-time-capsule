@@ -35,6 +35,10 @@ export default function SubmitPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '送信に失敗しました。');
+      // 完了ページの「投稿の控え」用。本人のブラウザ内にだけ一時保存する
+      try {
+        sessionStorage.setItem('natsu-receipt', JSON.stringify({ nickname: nickname.trim(), email: email.trim() }));
+      } catch {}
       router.push('/done');
     } catch (err) {
       setError(err.message);
