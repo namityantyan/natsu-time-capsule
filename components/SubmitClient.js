@@ -161,8 +161,8 @@ export default function SubmitClient({ submissionsOpen = true }) {
                 </div>
               </div>
 
-              <div className="notice" style={{ whiteSpace: 'pre-line' }}>
-                {copy.notice_text}
+              <div className="notice">
+                {String(copy.notice_text || '').replace(/\s*\n+\s*/g, '')}
               </div>
 
               <label className="check">
