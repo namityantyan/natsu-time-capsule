@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { NextResponse } from 'next/server';
 import { appendRow } from '../../../lib/sheets';
-import { isRevealed, BODY_MAX, NICKNAME_MAX, SUBMISSIONS_OPEN } from '../../../lib/config';
+import { isRevealed, BODY_MAX, NICKNAME_MAX, isSubmissionsOpen } from '../../../lib/config';
 import lettersData from '../../../lib/letters-data.json';
 
 export const dynamic = 'force-dynamic';
@@ -29,7 +29,7 @@ function rateLimited(ip) {
 
 // 手紙を投稿
 export async function POST(req) {
-  if (!SUBMISSIONS_OPEN) {
+  if (!isSubmissionsOpen()) {
     return NextResponse.json({ error: '手紙の受付は終了しました。' }, { status: 403 });
   }
 

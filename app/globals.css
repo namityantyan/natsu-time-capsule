@@ -155,6 +155,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--g
 textarea { min-height: 170px; resize: vertical; line-height: 1.9; font-family: var(--serif-jp); }
 .counter { text-align: right; font-size: 12px; color: var(--ink-soft); margin-top: 6px; }
 .field .hint { display: block; font-size: 12px; line-height: 1.7; color: var(--ink-soft); margin-top: 6px; }
+.deadline { margin: 10px 0 0; font-size: 13px; letter-spacing: 0.04em; color: var(--rose); }
 .radio-row { display: flex; gap: 12px; flex-wrap: wrap; }
 .radio-pill {
   flex: 1; min-width: 130px; cursor: pointer; border: 1px solid rgba(120,140,150,0.35);
