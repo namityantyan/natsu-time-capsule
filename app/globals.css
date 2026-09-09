@@ -367,7 +367,7 @@ body:has(.letters-scene) .particles { display: none; }
 
 /* ===== 投稿の控え（完了ページ） ===== */
 .receipt { margin: 18px 0 6px; padding: 14px 16px 12px; text-align: left; background: rgba(255,255,255,0.6); border: 1px dashed rgba(120,140,150,0.55); border-radius: 12px; }
-.receipt-title { margin: 0 0 10px; font-size: 13px; letter-spacing: 0.06em; color: var(--ink-soft); }
+.receipt-title { margin: 0 0 12px; font-size: 16px; font-weight: 600; letter-spacing: 0.06em; color: var(--ink); text-align: center; }
 .receipt-rows { margin: 0; display: grid; gap: 8px; }
 .receipt-rows > div { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
 .receipt-rows dt { flex: 0 0 7.5em; font-size: 12px; color: var(--ink-soft); }

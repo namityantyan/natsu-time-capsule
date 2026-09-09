@@ -15,7 +15,7 @@ export default function SubmitReceipt() {
   if (!r || !r.nickname || !r.email) return null;
   return (
     <div className="receipt">
-      <p className="receipt-title">投稿の控え ── スクショで保存してください</p>
+      <p className="receipt-title">📸 スクショで保存してください</p>
       <dl className="receipt-rows">
         <div><dt>ニックネーム</dt><dd>{r.nickname}</dd></div>
         <div><dt>メールアドレス</dt><dd>{r.email}</dd></div>
