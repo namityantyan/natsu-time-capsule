@@ -142,7 +142,7 @@ a:hover { text-decoration: underline; }
 @media (max-width: 480px) {
   .hero { padding-bottom: calc(clamp(40px, 8svh, 90px) + env(safe-area-inset-bottom, 0px)); } /* svhでツールバー分は除外済みなので余白は控えめに */
   /* 縦長画面ではイラストを少し拡大し下端基準に置くことで、女の子が上に来て文字ブロックが足元に乗る構図にする */
-  .hero { background-size: auto 118%; background-position: center 100%; }
+  .hero { background-size: auto 110%; background-position: center 100%; }
   .eyebrow { margin-bottom: 10px; }
   .hero-sub-en { margin-top: 12px; }
   .hero-meta { margin-top: 8px; }
