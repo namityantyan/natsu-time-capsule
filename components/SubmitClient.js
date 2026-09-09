@@ -55,11 +55,22 @@ export default function SubmitClient({ submissionsOpen = true }) {
           <img className="hero-logo" src="/logo.png" alt="夏のタイムカプセル" width={1500} height={197} />
           <p className="hero-sub-en">{copy.hero_sub_en}</p>
           <p className="hero-meta">{copy.hero_meta}</p>
-          <p className="scroll-hint">{copy.scroll_hint}</p>
+          <button
+            type="button"
+            className="scroll-hint"
+            onClick={() => {
+              const target = document.getElementById('write');
+              if (!target) return;
+              const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+              target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+            }}
+          >
+            {copy.scroll_hint}
+          </button>
         </div>
       </section>
 
-      <div className="wrap">
+      <div className="wrap" id="write">
         <section className="section">
           {submissionsOpen ? (
             <form className="panel" onSubmit={onSubmit}>
