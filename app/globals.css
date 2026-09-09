@@ -73,8 +73,11 @@ a:hover { text-decoration: underline; }
   position: relative;
   overflow: hidden; /* ロゴ裏のスクリム(130vw)が右にはみ出して横スクロールを生むのを防ぐ */
   min-height: 100vh;
+  min-height: 100svh; /* iOSのブラウザ下部ツールバーを除いた「実際に見えている高さ」に合わせる */
   display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-  text-align: center; padding: 0 22px clamp(64px, 15vh, 150px); /* 下端に余白を取り、SCROLLボタンを親指で押しやすい高さに */
+  text-align: center;
+  /* 下端に余白＋セーフエリアを取り、SCROLLボタンがツールバーと被らず押しやすい高さに */
+  padding: 0 22px calc(clamp(64px, 15vh, 150px) + env(safe-area-inset-bottom, 0px));
   background: var(--sky-1) url('/key-visual.jpg') center center / cover no-repeat;
 }
 .hero::after {
@@ -137,7 +140,13 @@ a:hover { text-decoration: underline; }
 #write { scroll-margin-top: 12px; }
 /* スマホ幅ではSCROLLボタンのラベルを1行に収める（字間・余白を詰める） */
 @media (max-width: 480px) {
-  .scroll-hint { white-space: nowrap; max-width: calc(100vw - 44px); font-size: 11.5px; letter-spacing: 0.16em; text-indent: 0.16em; padding: 11px 18px; }
+  .hero { padding-bottom: calc(clamp(76px, 17svh, 150px) + env(safe-area-inset-bottom, 0px)); }
+  /* 縦長画面ではイラストを少し拡大し下端基準に置くことで、女の子が上に来て文字ブロックが足元に乗る構図にする */
+  .hero { background-size: auto 118%; background-position: center 100%; }
+  .eyebrow { margin-bottom: 10px; }
+  .hero-sub-en { margin-top: 12px; }
+  .hero-meta { margin-top: 8px; }
+  .scroll-hint { margin-top: 34px; white-space: nowrap; max-width: calc(100vw - 44px); font-size: 11.5px; letter-spacing: 0.16em; text-indent: 0.16em; padding: 11px 18px; }
 }
 
 /* ===== light glass panel ===== */
